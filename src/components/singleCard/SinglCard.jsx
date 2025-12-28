@@ -8,11 +8,11 @@ import { Box } from "@mui/material";
 
 function SinglCard({ id, name, time, image, handleCardId }) {
   return (
-    <Card sx={{ position: "relative", width: "395px", height: "329px" }}>
+    <Card sx={{ position: "relative", width: "295px", height: "329px" }}>
       <CardMedia
         sx={{
           position: "absolute",
-          objectFit: "contain",
+          objectFit: "fill",
         }}
         component="img"
         height="100%"

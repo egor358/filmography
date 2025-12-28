@@ -29,7 +29,7 @@ export const Footer = () => {
             gap: "10px",
           }}
         >
-          <span>Terms Of Use</span> <span>Privacy-Polici</span> <span>FAQ</span>{" "}
+          <span>Terms Of Use</span> <span>Privacy-Polici</span> <span>FAQ</span>
           <span>Watch List</span>
         </Typography>
         <Typography

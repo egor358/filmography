@@ -47,6 +47,7 @@ function App() {
           marginTop: "75px",
           display: "flex",
           gap: "10px",
+          marginX:"10px"
         }}
       >
         {mockData.map((el) => (
