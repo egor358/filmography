@@ -1,4 +1,8 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, IconButton } from "@mui/material";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import GoogleIcon from "@mui/icons-material/Google";
 
 export const Footer = () => {
   return (
@@ -75,32 +79,33 @@ export const Footer = () => {
             gap: "10px",
           }}
         >
-          <img
-            src="/img/facebook.jpg"
+          <FacebookIcon
+            sx={{
+              width: "25px",
+              height: "25px",
+              color: "white",
+            }}
+          />
+          <InstagramIcon
             style={{
               width: "25px",
               height: "25px",
+              color: "white",
             }}
           />
-          <img
-            src="/img/twitter.png"
+          <TwitterIcon
             style={{
               width: "25px",
               height: "25px",
+              color:"white"
             }}
           />
-          <img
-            src="/img/googleplus.png"
-            style={{
-              width: "25px",
-              height: "25px",
-            }}
-          />
-          <img
+          <GoogleIcon
             src="/img/gadget.jpg"
             style={{
               width: "25px",
               height: "25px",
+              color:"white"
             }}
           />
         </Box>
@@ -108,7 +113,7 @@ export const Footer = () => {
 
       <Box
         sx={{
-          gap:"10px",
+          gap: "10px",
           marginTop: "20px",
           marginLeft: "100px",
         }}
@@ -121,24 +126,26 @@ export const Footer = () => {
         >
           Watchhit App
         </Typography>
-        <Box sx={{
-          display:"flex",
-          gap:"10px"
-        }}>
-        <img
-          src="/img/App-store.png"
-          style={{
-            height: "30px",
-            width: "80px",
+        <Box
+          sx={{
+            display: "flex",
+            gap: "10px",
           }}
-        />
-        <img
-          src="/img/google-play.png"
-          style={{
-            height: "30px",
-            width: "80px",
-          }}
-        />
+        >
+          <img
+            src="/img/App-store.png"
+            style={{
+              height: "30px",
+              width: "80px",
+            }}
+          />
+          <img
+            src="/img/google-play.png"
+            style={{
+              height: "30px",
+              width: "80px",
+            }}
+          />
         </Box>
       </Box>
     </Box>

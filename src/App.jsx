@@ -2,12 +2,14 @@ import "./App.css";
 import ResponsiveAppBar from "./components/menu/Menu";
 import SinglCard from "./components/singleCard/SinglCard";
 import { Box } from "@mui/system";
-import {Footer} from "./components/footer/Footer";
+import { Footer } from "./components/footer/Footer";
+import { useEffect, useState } from "react";
 
 function App() {
-  const handleCardId = (id) => {
-    console.log(id);
-  };
+  
+  const handleCardId = (id)=>{
+       
+  }
 
   const mockData = [
     {
@@ -36,18 +38,23 @@ function App() {
     },
   ];
   return (
-    <Box sx={{
-      height:'100vh',
-      display:'flex',
-      flexDirection:'column'
-    }}>
+    
+    <Box
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      
       <ResponsiveAppBar />
+      
       <Box
         sx={{
           marginTop: "75px",
           display: "flex",
           gap: "10px",
-          marginX:"10px"
+          marginX: "10px",
         }}
       >
         {mockData.map((el) => (
@@ -62,9 +69,12 @@ function App() {
         ))}
       </Box>
       
-     <Footer/>
+      <Footer />
     </Box>
+      
   );
 }
 
 export default App;
+
+
