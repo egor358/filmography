@@ -1,18 +1,19 @@
 import "./App.css";
-import ResponsiveAppBar from "./components/menu/Menu";
 import { Box } from "@mui/system";
-import { Footer } from "./components/footer/Footer";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Preloader } from "./components/preloader/Preloader";
 import { CardList } from "./components/cardList/CardList";
+import { useSearch } from "./components/context/mainContext";
 
 function App() {
   const handleCardId = (id) => {
     console.log(id);
   };
+  const {search} = useSearch() 
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
   useEffect(() => {
     const getFilms = async () => {
       try {
@@ -26,40 +27,31 @@ function App() {
         }
         const data = await response.json();
         console.log(data);
-        
+
         setFilms(data);
       } catch (error) {
         console.log(error);
-      }finally{
-        setLoading(false)
+      } finally {
+        setLoading(false);
       }
     };
     getFilms();
   }, []);
 
+const filterFilms = films.filter(fil =>
+  fil.name.toLowerCase().includes(search.trim()) 
+)
+
   return (
-    
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <ResponsiveAppBar />
+    <Box>
+      {}
       {loading ? (
         <Preloader />
       ) : (
-        <>
-         <CardList films={films} handleCardId={handleCardId}/>
-        </>
+        <CardList films={filterFilms} handleCardId={handleCardId} />
       )}
-      <Footer />
     </Box>
-      
-      
   );
-
 }
 
 export default App;
