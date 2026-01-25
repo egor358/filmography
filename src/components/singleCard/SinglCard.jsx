@@ -2,12 +2,12 @@ import React from "react";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 
-import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { Card, CardMedia } from "@mui/material";
 import { Box } from "@mui/material";
+import { Link } from "react-router";
 
-function SinglCard({ id, name, time, image,ended, handleCardId }) {
+function SinglCard({ id, name, time, image, ended, handleCardId }) {
   return (
     <Card sx={{ position: "relative", width: "295px", height: "329px" }}>
       <CardMedia
@@ -47,12 +47,11 @@ function SinglCard({ id, name, time, image,ended, handleCardId }) {
         <Typography gutterBottom sx={{ fontSize: 14 }}>
           {time}
         </Typography>
-        <Typography gutterBottom sx={{ fontSize: 14 }} >
+        <Typography gutterBottom sx={{ fontSize: 14 }}>
           {ended}
         </Typography>
-        <Button
-          onClick={() => handleCardId(id)}
-          size="small"
+        <Link
+          to={`show/${id}`}
           sx={{
             textTransform: "none",
             border: "1px solid #E50914",
@@ -64,7 +63,7 @@ function SinglCard({ id, name, time, image,ended, handleCardId }) {
           }}
         >
           Learn More
-        </Button>
+        </Link>
       </CardContent>
     </Card>
   );
