@@ -9,7 +9,7 @@ function App() {
   const handleCardId = (id) => {
     console.log(id);
   };
-  const {search} = useSearch() 
+  const { search } = useSearch();
   const [films, setFilms] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -19,7 +19,7 @@ function App() {
       try {
         setLoading(true);
         const response = await fetch(
-          "https://watchit-api.onrender.com/shows?amount=10"
+          `https://watchit-api.onrender.com/shows?q=${search}`
         );
         if (!response.ok) {
           setError("somthing went wrong");
@@ -36,11 +36,9 @@ function App() {
       }
     };
     getFilms();
-  }, []);
+  }, [search]);
+ 
 
-const filterFilms = films.filter(fil =>
-  fil.name.toLowerCase().includes(search.trim()) 
-)
 
   return (
     <Box>
@@ -48,7 +46,7 @@ const filterFilms = films.filter(fil =>
       {loading ? (
         <Preloader />
       ) : (
-        <CardList films={filterFilms} handleCardId={handleCardId} />
+        <CardList films={films} handleCardId={handleCardId} />
       )}
     </Box>
   );

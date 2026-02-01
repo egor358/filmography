@@ -15,8 +15,8 @@ export const CardList = ({ films, handleCardId }) => {
             key={el.id}
             id={el.id}
             name={el.name}
-            image={el.image.medium}
-            time={el.schedule.time}
+            image={el.image?.medium}
+            time={el.schedule?.time}
             ended={el.ended}
             handleCardId={handleCardId}
           />
