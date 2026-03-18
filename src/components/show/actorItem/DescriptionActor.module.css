@@ -1,0 +1,25 @@
+.moveLeft {
+  position: absolute;
+  animation-name: moveLeft;
+  animation-duration: 2s;
+  width: auto;
+  height: auto;
+}
+
+.moveRight {
+  position: absolute;
+  animation-name: moveRight;
+  animation-duration: 2s;
+  width: auto;
+  height: auto;
+}
+
+@keyframes moveLeft {
+  0% { left: 0; }
+  100% { left: -400px; }  
+}
+
+@keyframes moveRight {
+  0% { left: 0; }
+  100% { left: 400px; }   
+}

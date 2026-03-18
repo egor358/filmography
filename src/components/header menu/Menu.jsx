@@ -13,6 +13,7 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { TextField } from "@mui/material";
 import { useSearch } from "../context/mainContext";
+import { Link } from "react-router-dom";
 
 const pages = ["Home", "TV Show", "About Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -123,15 +124,27 @@ function ResponsiveAppBar() {
             }}
           ></Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) =>
+              page === "Home" ? (
+                <Button
+                  key={page}
+                  component={Link}
+                  to="/"
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ) : (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ),
+            )}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
             <TextField

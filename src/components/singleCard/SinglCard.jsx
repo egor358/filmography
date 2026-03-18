@@ -5,8 +5,7 @@ import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import { Card, CardMedia } from "@mui/material";
 import { Box } from "@mui/material";
-import { Link } from "react-router";
-
+import { Link } from "react-router-dom";
 function SinglCard({ id, name, time, image, ended, handleCardId }) {
   return (
     <Card sx={{ position: "relative", width: "295px", height: "329px" }}>
@@ -52,7 +51,7 @@ function SinglCard({ id, name, time, image, ended, handleCardId }) {
         </Typography>
         <Link
           to={`show/${id}`}
-          sx={{
+          style={{
             textTransform: "none",
             border: "1px solid #E50914",
             background: "#E50914",
