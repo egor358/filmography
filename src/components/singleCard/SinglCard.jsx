@@ -8,7 +8,7 @@ import { Box } from "@mui/material";
 import { Link } from "react-router-dom";
 function SinglCard({ id, name, time, image, ended, handleCardId }) {
   return (
-    <Card sx={{ position: "relative", width: "295px", height: "329px" }}>
+    <Card sx={{ position: "relative", width: "100%", height: "270px" }}>
       <CardMedia
         sx={{
           position: "absolute",

@@ -33,13 +33,13 @@ export const Register = () => {
         "https://watchit-api.onrender.com/auth/signup",
         formData,
       );
+      console.log(response);
       alert("Registration was successful");
     } catch (error) {
       setError("Password error");
     } finally {
       setLoading(false);
     }
-    console.log(formData);
   };
 
   return (
@@ -101,10 +101,11 @@ export const Register = () => {
             {loading ? <Preloader /> : "REGISTER"}
           </button>
         </form>
-        {error && <Typography sx={{color:"red"}}>Something went wrong</Typography>}
+        {error && (
+          <Typography sx={{ color: "red" }}>Something went wrong</Typography>
+        )}
       </Box>
     </>
   );
 };
-//нужно ли передавать токен и где его взять
 

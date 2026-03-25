@@ -1,11 +1,13 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 import axios from "axios";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate()
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -18,14 +20,15 @@ export const Login = () => {
     try {
       const response = await axios.post(
         "https://watchit-api.onrender.com/auth/login",
-        { email, password }
+        { email, password },
       );
-
+      console.log(response);
+      
       const token = response.data.access_token;
-      console.loge(token)
-      localStorage.setItem("token", token); 
+      console.log(token);
+      localStorage.setItem("token", token);
       alert("Вход выполнен!");
-      window.location.href = "/"; 
+      navigate("/")
     } catch (error) {
       setError("Неверный email или пароль");
     }
@@ -47,7 +50,10 @@ export const Login = () => {
         Login
       </Typography>
 
-      <form onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+      <form
+        onSubmit={handleLogin}
+        style={{ display: "flex", flexDirection: "column", gap: "10px" }}
+      >
         <input
           onChange={(e) => setEmail(e.target.value)}
           value={email}
@@ -62,7 +68,7 @@ export const Login = () => {
           placeholder="Пароль"
         />
 
-        <input type="submit" value="Войти" />
+        <button type="submit">Войти</button>
       </form>
 
       {error && <Typography color="error">{error}</Typography>}

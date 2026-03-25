@@ -140,6 +140,8 @@ export const SingleItemHeader = ({ film }) => {
           height: "150px",
           borderRadius: "10px",
           margin: "15px",
+          objectFit: "contain",
+          backgroundColor: "black",
         }}
         component="img"
         image={film.image?.medium}
