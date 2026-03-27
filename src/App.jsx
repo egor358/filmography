@@ -1,65 +1,270 @@
 import "./App.css";
-import ResponsiveAppBar from "./components/menu/Menu";
-import { Box } from "@mui/system";
-import { Footer } from "./components/footer/Footer";
+import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Preloader } from "./components/preloader/Preloader";
 import { CardList } from "./components/cardList/CardList";
-
+import { useSearch } from "./components/context/mainContext";
+import axios from "axios";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import TitleSingleSlide from "./components/titleSinleSlide/TitleSingleSlide";
 function App() {
   const handleCardId = (id) => {
     console.log(id);
   };
+  const { search } = useSearch();
+
   const [films, setFilms] = useState([]);
+  const [popular, setPopular] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [actions, setActions] = useState([]);
+  const [comedy, setComedy] = useState([]);
+
+  useEffect(() => {
+    const getGenres = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [comedyRes, actionRes] = await Promise.all([
+          axios.get("https://watchit-api.onrender.com/shows/byGenre/comedy"),
+          axios.get("https://watchit-api.onrender.com/shows/byGenre/action"),
+        ]);
+
+        setComedy(comedyRes.data);
+        setActions(actionRes.data);
+        console.log(comedyRes.data);
+        console.log(actionRes.data);
+      } catch (error) {
+        console.log(error);
+        setError("Failed to load genres");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getGenres();
+  }, []);
+
+  useEffect(() => {
+    const getPopular = async () => {
+      try {
+        setLoading(true);
+        setError("");
+        const saveToken = localStorage.getItem("token");
+        const res = await axios.get(
+          "https://watchit-api.onrender.com/shows/popular",
+          {
+            headers: {
+              Authorization: `Bearer ${saveToken}`,
+            },
+          },
+        );
+
+        setPopular(res.data);
+        console.log("Popular загружены:", res.data);
+      } catch (error) {
+        console.error("Ошибка popular:", error);
+        setError("Failed to load popular shows");
+      } finally {
+        setLoading(false);
+      }
+    };
+    getPopular();
+  }, []);
+
   useEffect(() => {
     const getFilms = async () => {
       try {
         setLoading(true);
+        setError("");
+
         const response = await fetch(
-          "https://watchit-api.onrender.com/shows?amount=10"
+          `https://watchit-api.onrender.com/shows?q=${search}`,
         );
         if (!response.ok) {
-          setError("somthing went wrong");
+          setError("something went wrong");
           return;
         }
         const data = await response.json();
-        console.log(data);
-        
         setFilms(data);
+        console.log("Поиск:", data);
       } catch (error) {
-        console.log(error);
-      }finally{
-        setLoading(false)
+        console.error(error);
+        setError("Search failed");
+      } finally {
+        setLoading(false);
       }
     };
     getFilms();
-  }, []);
+  }, [search]);
+
+  if (loading) return <Preloader />;
 
   return (
-    
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <ResponsiveAppBar />
-      {loading ? (
-        <Preloader />
+    <Box sx={{ bgcolor: "black", color: "white", minHeight: "100vh" }}>
+      {error && (
+        <Typography color="error" sx={{ pl: 4 }}>
+          {error}
+        </Typography>
+      )}
+
+      {search.trim() ? (
+        <CardList films={films} handleCardId={handleCardId} />
       ) : (
         <>
-         <CardList films={films} handleCardId={handleCardId}/>
+          {popular.length > 0 ? (
+            <Box sx={{ mb: 1, px: 7 }}>
+              <Typography variant="h4" sx={{ mb: 3, pl: 4 }}>
+                Popular Shows
+              </Typography>
+
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev popular-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".popular-prev",
+                    nextEl: ".popular-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {popular.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next popular-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
+            </Box>
+          ) : (
+            <Typography sx={{ pl: 4, py: 4 }}>
+              Popular shows are loading...
+            </Typography>
+          )}
+
+          {comedy.length > 0 && (
+            <Box sx={{ mb: 8, px: 7 }}>
+              <Typography variant="h4" sx={{ mb: 3, pl: 4 }}>
+                Comedy Shows
+              </Typography>
+
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev comedy-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".comedy-prev",
+                    nextEl: ".comedy-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {comedy.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next comedy-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
+            </Box>
+          )}
+
+          {actions.length > 0 && (
+            <Box sx={{ mb: 8, px: 7 }}>
+              <Typography variant="h4" sx={{ mb: 3, pl: 4 }}>
+                Action Shows
+              </Typography>
+
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev action-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".action-prev",
+                    nextEl: ".action-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {actions.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next action-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
+            </Box>
+          )}
         </>
       )}
-      <Footer />
     </Box>
-      
-      
   );
-
 }
 
 export default App;

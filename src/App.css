@@ -1,5 +1,41 @@
-body,#root {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+#root {                       
+  min-height: 100vh;          
+  display: flex;
+  flex-direction: column;
+  background-color: #141414;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh
+}
+.main {
+  flex: 1;
+}
+
+.hero-swiper-shell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.hero-swiper {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.hero-nav {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #fff;
+  cursor: pointer;
+  z-index: 20;
+  font-size: 20px;
+  line-height: 1;
 }

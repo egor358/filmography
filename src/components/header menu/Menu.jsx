@@ -11,11 +11,15 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
+import { TextField } from "@mui/material";
+import { useSearch } from "../context/mainContext";
+import { Link } from "react-router-dom";
 
 const pages = ["Home", "TV Show", "About Us"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
+  const { search, setSearch } = useSearch();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -37,6 +41,7 @@ function ResponsiveAppBar() {
   return (
     <AppBar
       sx={{
+        position: "static",
         backgroundColor: "#000",
         color: "#FFFFFF",
         width: "100%",
@@ -50,7 +55,6 @@ function ResponsiveAppBar() {
             alt="Logo"
             style={{
               width: "150px",
-             
             }}
           />
           <Typography
@@ -120,22 +124,50 @@ function ResponsiveAppBar() {
             }}
           ></Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
-            ))}
+            {pages.map((page) =>
+              page === "Home" ? (
+                <Button
+                  key={page}
+                  component={Link}
+                  to="/"
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ) : (
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {page}
+                </Button>
+              ),
+            )}
           </Box>
           <Box sx={{ flexGrow: 0 }}>
+            <TextField
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              id="filled-search"
+              label="Search field"
+              type="search"
+              variant="outlined"
+              size="small"
+              sx={{
+                background: "#fff",
+                borderRadius: "5px",
+                width: "170px",
+                marginRight: "10px",
+              }}
+            />
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                 <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
               </IconButton>
             </Tooltip>
+
             <Menu
               sx={{ mt: "45px" }}
               id="menu-appbar"
