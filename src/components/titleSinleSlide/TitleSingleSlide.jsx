@@ -9,7 +9,7 @@ const TitleSingleSlide = ({ id, name, image, time, premiered }) => {
     <Box
       sx={{
         position: "relative",
-        width: "100%",
+        width: "290px",
         height: "265px",
         borderRadius: 2,
         overflow: "hidden",

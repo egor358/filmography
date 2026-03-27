@@ -10,7 +10,7 @@ import { Navigation, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import TitleSingleSlide from "./components/title_sinle_slide/TitleSingleSlide";
+import TitleSingleSlide from "./components/titleSinleSlide/TitleSingleSlide";
 function App() {
   const handleCardId = (id) => {
     console.log(id);
@@ -25,43 +25,29 @@ function App() {
   const [comedy, setComedy] = useState([]);
 
   useEffect(() => {
-    const getComedy = async () => {
+    const getGenres = async () => {
       try {
         setLoading(true);
         setError("");
-        const res = await axios.get(
-          "https://watchit-api.onrender.com/shows/byGenre/comedy",
-        );
-        setComedy(res.data);
-        console.log(res.data);
-      } catch (error) {
-        console.log(error);
-        setError("Не удалось загрузить comedy shows");
-      } finally {
-        setLoading(false);
-      }
-    };
-    getComedy();
-  }, []);
 
-  useEffect(() => {
-    const getAction = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        const res = await axios.get(
-          "https://watchit-api.onrender.com/shows/byGenre/action",
-        );
-        setActions(res.data);
-        console.log(res.data);
+        const [comedyRes, actionRes] = await Promise.all([
+          axios.get("https://watchit-api.onrender.com/shows/byGenre/comedy"),
+          axios.get("https://watchit-api.onrender.com/shows/byGenre/action"),
+        ]);
+
+        setComedy(comedyRes.data);
+        setActions(actionRes.data);
+        console.log(comedyRes.data);
+        console.log(actionRes.data);
       } catch (error) {
         console.log(error);
-        setError("Не удалось загрузить action shows");
+        setError("Failed to load genres");
       } finally {
         setLoading(false);
       }
     };
-    getAction();
+
+    getGenres();
   }, []);
 
   useEffect(() => {
@@ -83,7 +69,7 @@ function App() {
         console.log("Popular загружены:", res.data);
       } catch (error) {
         console.error("Ошибка popular:", error);
-        setError("Не удалось загрузить популярные шоу");
+        setError("Failed to load popular shows");
       } finally {
         setLoading(false);
       }
@@ -109,7 +95,7 @@ function App() {
         console.log("Поиск:", data);
       } catch (error) {
         console.error(error);
-        setError("Ошибка поиска");
+        setError("Search failed");
       } finally {
         setLoading(false);
       }
@@ -137,34 +123,48 @@ function App() {
                 Popular Shows
               </Typography>
 
-              <Swiper
-                modules={[Navigation, Autoplay]}
-                spaceBetween={20}
-                slidesPerView={4}
-                navigation
-                autoplay={{ delay: 5000, disableOnInteraction: false }}
-                loop={true}
-                style={{
-                  width: "100%",
-                }}
-              >
-                {popular.map((show) => (
-                  <SwiperSlide key={show.id}>
-                    <TitleSingleSlide
-                      id={show.id}
-                      name={show.name}
-                      image={show.image?.original || show.image?.medium}
-                      time={show.schedule?.time}
-                      premiered={show.premiered}
-                      runtime={show.runtime}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev popular-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".popular-prev",
+                    nextEl: ".popular-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {popular.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next popular-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
             </Box>
           ) : (
             <Typography sx={{ pl: 4, py: 4 }}>
-              Популярные шоу загружаются...
+              Popular shows are loading...
             </Typography>
           )}
 
@@ -174,31 +174,44 @@ function App() {
                 Comedy Shows
               </Typography>
 
-              <Swiper
-                modules={[Navigation, Autoplay]}
-                spaceBetween={20}
-                slidesPerView={4}
-                navigation
-                autoplay={{ delay: 5000, disableOnInteraction: false }}
-                loop={true}
-                style={{
-                  width: "100%",
-                  "--swiper-navigation-sides-offset": "0px",
-                }}
-              >
-                {comedy.map((show) => (
-                  <SwiperSlide key={show.id}>
-                    <TitleSingleSlide
-                      id={show.id}
-                      name={show.name}
-                      image={show.image?.original || show.image?.medium}
-                      time={show.schedule?.time}
-                      premiered={show.premiered}
-                      runtime={show.runtime}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev comedy-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".comedy-prev",
+                    nextEl: ".comedy-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {comedy.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next comedy-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
             </Box>
           )}
 
@@ -208,31 +221,44 @@ function App() {
                 Action Shows
               </Typography>
 
-              <Swiper
-                modules={[Navigation, Autoplay]}
-                spaceBetween={20}
-                slidesPerView={4}
-                navigation
-                autoplay={{ delay: 5000, disableOnInteraction: false }}
-                loop={true}
-                style={{
-                  width: "100%",
-                  "--swiper-navigation-sides-offset": "0px",
-                }}
-              >
-                {actions.map((show) => (
-                  <SwiperSlide key={show.id}>
-                    <TitleSingleSlide
-                      id={show.id}
-                      name={show.name}
-                      image={show.image?.original || show.image?.medium}
-                      time={show.schedule?.time}
-                      premiered={show.premiered}
-                      runtime={show.runtime}
-                    />
-                  </SwiperSlide>
-                ))}
-              </Swiper>
+              <Box className="hero-swiper-shell">
+                <button className="hero-nav prev action-prev" type="button">
+                  &#10094;
+                </button>
+
+                <Swiper
+                  className="hero-swiper"
+                  modules={[Navigation, Autoplay]}
+                  spaceBetween={20}
+                  slidesPerView={4}
+                  navigation={{
+                    prevEl: ".action-prev",
+                    nextEl: ".action-next",
+                  }}
+                  autoplay={{ delay: 5000, disableOnInteraction: false }}
+                  loop={true}
+                  style={{
+                    width: "100%",
+                  }}
+                >
+                  {actions.map((show) => (
+                    <SwiperSlide key={show.id}>
+                      <TitleSingleSlide
+                        id={show.id}
+                        name={show.name}
+                        image={show.image?.original || show.image?.medium}
+                        time={show.schedule?.time}
+                        premiered={show.premiered}
+                        runtime={show.runtime}
+                      />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
+
+                <button className="hero-nav next action-next" type="button">
+                  &#10095;
+                </button>
+              </Box>
             </Box>
           )}
         </>

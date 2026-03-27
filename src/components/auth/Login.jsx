@@ -1,19 +1,26 @@
 import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleLogin = async (event) => {
     event.preventDefault();
 
     if (!email || !password) {
-      setError("Заполни все поля");
+      setError("Fill in all fields");
       return;
     }
 
@@ -27,10 +34,14 @@ export const Login = () => {
       const token = response.data.access_token;
       console.log(token);
       localStorage.setItem("token", token);
-      alert("Вход выполнен!");
-      navigate("/")
+      setError("");
+      setOpenSnackbar(true);
+
+      setTimeout(() => {
+        navigate("/");
+      }, 1000);
     } catch (error) {
-      setError("Неверный email или пароль");
+      setError("Invalid email or password");
     }
   };
 
@@ -68,10 +79,24 @@ export const Login = () => {
           placeholder="Пароль"
         />
 
-        <button type="submit">Войти</button>
+        <button type="submit" style={{ cursor: "pointer" }}>Войти</button>
       </form>
 
       {error && <Typography color="error">{error}</Typography>}
+
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={3000}
+        onClose={handleCloseSnackbar}
+      >
+        <Alert
+          onClose={handleCloseSnackbar}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Login successful
+        </Alert>
+      </Snackbar>
     </Box>
   );
 };

@@ -2,6 +2,8 @@ import { Box, Typography } from "@mui/material";
 import React, { useState } from "react";
 import axios from "axios";
 import { Preloader } from "../preloader/Preloader";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
@@ -9,16 +11,21 @@ export const Register = () => {
   const [error, setError] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
 
   const handleRegister = async (event) => {
     event.preventDefault();
 
     if (password !== confirmPassword) {
-      setError("Пароли не совпадают");
+      setError("Passwords do not match");
       return;
     }
     if (!email || !password || !confirmPassword) {
-      setError("Заполни все поля");
+      setError("Fill in all fields");
       return;
     }
     setLoading(true);
@@ -34,9 +41,10 @@ export const Register = () => {
         formData,
       );
       console.log(response);
-      alert("Registration was successful");
+      setError("");
+      setOpenSnackbar(true);
     } catch (error) {
-      setError("Password error");
+      setError("Registration failed");
     } finally {
       setLoading(false);
     }
@@ -104,6 +112,20 @@ export const Register = () => {
         {error && (
           <Typography sx={{ color: "red" }}>Something went wrong</Typography>
         )}
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={3000}
+          onClose={handleCloseSnackbar}
+        >
+          <Alert
+            onClose={handleCloseSnackbar}
+            severity="success"
+            sx={{ width: "100%" }}
+          >
+            Registration successful
+          </Alert>
+        </Snackbar>
       </Box>
     </>
   );
