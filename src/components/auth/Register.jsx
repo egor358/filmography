@@ -4,6 +4,7 @@ import axios from "axios";
 import { Preloader } from "../preloader/Preloader";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ export const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState(false);
+  const navigate = useNavigate();
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar(false);
@@ -43,6 +45,9 @@ export const Register = () => {
       console.log(response);
       setError("");
       setOpenSnackbar(true);
+      setTimeout(() => {
+        navigate("/auth/Login");
+      }, 1500);
     } catch (error) {
       setError("Registration failed");
     } finally {
@@ -115,7 +120,7 @@ export const Register = () => {
 
         <Snackbar
           open={openSnackbar}
-          autoHideDuration={3000}
+          autoHideDuration={1500}
           onClose={handleCloseSnackbar}
         >
           <Alert
@@ -130,4 +135,3 @@ export const Register = () => {
     </>
   );
 };
-

@@ -52,10 +52,16 @@ function App() {
 
   useEffect(() => {
     const getPopular = async () => {
+      const saveToken = localStorage.getItem("token");
+
+      if (!saveToken) {
+        return;
+      }
+
       try {
         setLoading(true);
         setError("");
-        const saveToken = localStorage.getItem("token");
+
         const res = await axios.get(
           "https://watchit-api.onrender.com/shows/popular",
           {
@@ -117,56 +123,57 @@ function App() {
         <CardList films={films} handleCardId={handleCardId} />
       ) : (
         <>
-          {popular.length > 0 ? (
-            <Box sx={{ mb: 1, px: 7 }}>
-              <Typography variant="h4" sx={{ mb: 3, pl: 4 }}>
-                Popular Shows
-              </Typography>
+          {localStorage.getItem("token") &&
+            (popular.length > 0 ? (
+              <Box sx={{ mb: 1, px: 7 }}>
+                <Typography variant="h4" sx={{ mb: 3, pl: 4 }}>
+                  Popular Shows
+                </Typography>
 
-              <Box className="hero-swiper-shell">
-                <button className="hero-nav prev popular-prev" type="button">
-                  &#10094;
-                </button>
+                <Box className="hero-swiper-shell">
+                  <button className="hero-nav prev popular-prev" type="button">
+                    &#10094;
+                  </button>
 
-                <Swiper
-                  className="hero-swiper"
-                  modules={[Navigation, Autoplay]}
-                  spaceBetween={20}
-                  slidesPerView={4}
-                  navigation={{
-                    prevEl: ".popular-prev",
-                    nextEl: ".popular-next",
-                  }}
-                  autoplay={{ delay: 5000, disableOnInteraction: false }}
-                  loop={true}
-                  style={{
-                    width: "100%",
-                  }}
-                >
-                  {popular.map((show) => (
-                    <SwiperSlide key={show.id}>
-                      <TitleSingleSlide
-                        id={show.id}
-                        name={show.name}
-                        image={show.image?.original || show.image?.medium}
-                        time={show.schedule?.time}
-                        premiered={show.premiered}
-                        runtime={show.runtime}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
+                  <Swiper
+                    className="hero-swiper"
+                    modules={[Navigation, Autoplay]}
+                    spaceBetween={20}
+                    slidesPerView={4}
+                    navigation={{
+                      prevEl: ".popular-prev",
+                      nextEl: ".popular-next",
+                    }}
+                    autoplay={{ delay: 5000, disableOnInteraction: false }}
+                    loop={true}
+                    style={{
+                      width: "100%",
+                    }}
+                  >
+                    {popular.map((show) => (
+                      <SwiperSlide key={show.id}>
+                        <TitleSingleSlide
+                          id={show.id}
+                          name={show.name}
+                          image={show.image?.original || show.image?.medium}
+                          time={show.schedule?.time}
+                          premiered={show.premiered}
+                          runtime={show.runtime}
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
 
-                <button className="hero-nav next popular-next" type="button">
-                  &#10095;
-                </button>
+                  <button className="hero-nav next popular-next" type="button">
+                    &#10095;
+                  </button>
+                </Box>
               </Box>
-            </Box>
-          ) : (
-            <Typography sx={{ pl: 4, py: 4 }}>
-              Popular shows are loading...
-            </Typography>
-          )}
+            ) : (
+              <Typography sx={{ pl: 4, py: 4 }}>
+                Popular shows are loading...
+              </Typography>
+            ))}
 
           {comedy.length > 0 && (
             <Box sx={{ mb: 8, px: 7 }}>
